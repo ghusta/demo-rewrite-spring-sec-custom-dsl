@@ -1,0 +1,42 @@
+= Demo for issue with recipe org.openrewrite.java.spring.security6.ApplyToWithLambdaDsl
+:toc:
+
+Demo for issue with OpenRewrite's recipe https://docs.openrewrite.org/recipes/java/spring/security6/applytowithlambdadsl[`ApplyToWithLambdaDsl`], present in module https://github.com/openrewrite/rewrite-spring/[rewrite-spring].
+
+Original request for recipe : https://github.com/openrewrite/rewrite-spring/issues/449
+
+== Reproduce the problem
+
+Run:
+
+[source]
+----
+mvn rewrite:run
+----
+
+Got:
+
+[source]
+----
+Error while visiting src\main\java\com\example\demorewritespringseccustomdsl\SecurityConfig.java: java.lang.NullPointerException: Cannot invoke "String.equals(Object)" because the return value of "org.openrewrite.java.tree.JavaType$Method.getName()" is null
+  org.openrewrite.java.tree.J$MethodInvocation.withName(J.java:3837)
+  org.openrewrite.java.spring.boot2.ConvertToSecurityDslVisitor.lambda$computeAndMarkChain$2(ConvertToSecurityDslVisitor.java:241)
+  java.base/java.util.Optional.ifPresent(Optional.java:178)
+  org.openrewrite.java.spring.boot2.ConvertToSecurityDslVisitor.computeAndMarkChain(ConvertToSecurityDslVisitor.java:239)
+  org.openrewrite.java.spring.boot2.ConvertToSecurityDslVisitor.lambda$visitMethodInvocation$0(ConvertToSecurityDslVisitor.java:87)
+  java.base/java.util.Optional.map(Optional.java:260)
+  org.openrewrite.java.spring.boot2.ConvertToSecurityDslVisitor.visitMethodInvocation(ConvertToSecurityDslVisitor.java:86)
+  org.openrewrite.java.spring.boot2.ConvertToSecurityDslVisitor.visitMethodInvocation(ConvertToSecurityDslVisitor.java:34)
+  ...
+----
+
+== Additional context
+
+Spring Security's documentation:
+
+* https://docs.spring.io/spring-security/reference/6.0/servlet/configuration/java.html#jc-custom-dsls[Custom DSLs] (v6.0)
+* https://docs.spring.io/spring-security/reference/6.2/servlet/configuration/java.html#jc-custom-dsls[Custom DSLs] (v6.2)
+
+== Related issue
+
+* https://github.com/openrewrite/rewrite-spring/issues/468
